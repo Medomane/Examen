@@ -57,6 +57,7 @@ export default class CreateUser extends Component {
     e.preventDefault();
 
     const user = {
+      username : this.state.username,
       gender :  this.state.gender,
       dob :  this.state.dob,
       news :  this.state.news,
