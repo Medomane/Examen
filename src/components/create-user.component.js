@@ -9,6 +9,7 @@ export default class CreateUser extends Component {
 
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeGender = this.onChangeGender.bind(this);
+    this.onChangeNews= this.onChangeNews.bind(this);
     this.onChangeDob = this.onChangeDob.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePhoto = this.onChangePhoto.bind(this);
@@ -17,8 +18,8 @@ export default class CreateUser extends Component {
     this.state = {
       username :'',
       gender :  '',
-      dob :  new Date(),
       news :  false,
+      dob :  new Date(),
       email :  '',
       photo :  'avatar.png'
     }
@@ -36,6 +37,13 @@ export default class CreateUser extends Component {
     })
   }
   
+
+  onChangeNews(e) {
+    this.setState({
+      news: e.target.checked
+    });
+  }
+  
   onChangeEmail(e) {
     this.setState({
       email: e.target.value
@@ -49,8 +57,8 @@ export default class CreateUser extends Component {
 
   onChangeDob(date) {
     this.setState({
-      date: date
-    })
+      dob: date,
+    });
   }
 
   onSubmit(e) {
@@ -59,17 +67,18 @@ export default class CreateUser extends Component {
     const user = {
       username : this.state.username,
       gender :  this.state.gender,
-      dob :  this.state.dob,
+      dob :  ""+this.state.dob+"",
       news :  this.state.news,
       email :  this.state.email,
       photo : this.state.photo
     }
-
-
+    //console.log(user);
     axios.post('http://localhost:5000/users', user)
-      .then(res => console.log(res.data));
+      .then(res => console.log(res.data)).catch(function (error) {
+        alert(error.response.data);
+   });;
 
-    window.location = '/';
+    //window.location = '/';
   }
 
   render() {
@@ -105,7 +114,7 @@ export default class CreateUser extends Component {
               className="form-control"
               value={this.state.gendre}
               onChange={this.onChangeGender}>
-                <option key="male" value="male">male</option>
+                <option key="male" value="male" defaultValue="male">male</option>
                 <option key="female" value="female">female</option>
           </select>
         </div>
@@ -113,6 +122,7 @@ export default class CreateUser extends Component {
         <div className="form-group">
           <label>Email: </label>
           <input 
+              required
               type="text" 
               className="form-control"
               value={this.state.email}
@@ -127,6 +137,18 @@ export default class CreateUser extends Component {
               selected={this.state.dob}
               onChange={this.onChangeDob}
             />
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label>News: </label>
+          <div>
+            <input 
+              type="checkbox" 
+              className="form-control"
+              checked={this.state.news}
+              onChange={this.onChangeNews}
+              />
           </div>
         </div>
 

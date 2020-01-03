@@ -10,11 +10,11 @@ const userSchema = new Schema({
     trim: true,
     minlength: 3
   },
-  gender : { type : String, required: true },
-  dob:{type: Date,default: Date.now},
+  gender : { type : String },
+  dob:{type: Date},
   news:{type : Boolean},
   email : {type : String,required: true},
-  photo : {type : String,required: true,default:"avatar.png"}
+  photo : {type : String,required: true}
 }, {
   timestamps: true,
 });
