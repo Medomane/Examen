@@ -72,13 +72,11 @@ export default class CreateUser extends Component {
       email :  this.state.email,
       photo : this.state.photo
     }
-    //console.log(user);
+    
     axios.post('http://localhost:5000/users', user)
-      .then(res => console.log(res.data)).catch(function (error) {
-        alert(error.response.data);
-   });;
-
-    //window.location = '/';
+      .then(res => console.log(res.data))
+      .catch(error => alert(error.response.data));
+    window.location = '/';
   }
 
   render() {
