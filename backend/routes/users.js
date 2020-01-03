@@ -15,6 +15,7 @@ router.route('/:page/:size').get((req, res) => {
     .sort({createdAt:'asc'})
     .then(user => res.json(user))
     .catch(err => res.status(400).json('Error: ' + err));
+    console.log("lwla",user);
 });
 
 //Crée un nouvel utilisateur (work)
