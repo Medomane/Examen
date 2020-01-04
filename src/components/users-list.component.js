@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from './navigation.component';
 
 const User = props => (
   <tr>
@@ -30,24 +31,20 @@ export default class UsersList extends Component {
     this.prevPage = this.prevPage.bind(this);*/
     this.state = {
         users: [],
-        currentPage:1,
-        total: 0,
-        per_page: 5,
+        infos:[]
     };
   }
 
   componentDidMount() {
     this.getPage(1,5);
   }
-  
+
   getPage(page,size){
     axios.get(`http://localhost:5000/users/${page}/${size}`)
     .then(response => {
       this.setState({ 
-          users: response.data,
-          total: response.data.length,
-          current_page : page,
-          per_page : size
+          users: response.data.users,
+          infos:response.data.infos
       });
     })
     .catch((error) => {
@@ -63,38 +60,25 @@ export default class UsersList extends Component {
     })
   }
 
-  paginationList(){
-    
-  }
-
   userList() {
     return this.state.users.map(currentuser => {
       return <User users={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
     })
   }
 
-  /*pageList() {
-    for(i=0;i<this.state.users.length)
-    return this.state.users.map(currentuser => {
-      return <User users={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
-    })
-  }*/
-
   render() {
-    /*let renderPageNumbers;
-    const pageNumbers = [];
-    if (this.state.total !== null) {
-        for (let i = 1; i <= Math.ceil(this.state.total / this.state.per_page); i++) {
-          pageNumbers.push(i);
-        }
-        renderPageNumbers = pageNumbers.map(number => {
-            let classes = this.state.current_page === number ? 'active' : '';
-            console.log(number);
-            return ( 
-                <li className="page-item"><a key={number} className="page-link" href="#" onClick={() => this.getPage(number,5)}>1</a></li>            
-            );
-        });
-    }*/
+    /*const [users] = this.state.users;
+    const [currentPage, getPage] = this.state(1);
+    const [usersPerPage] = this.state(10);
+
+    // Get current posts
+    const indexOfLastPost = currentPage * usersPerPage;
+    const indexOfFirstPost = indexOfLastPost - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstPost, indexOfLastPost);*/
+
+    // Change page
+    const paginate = pageNumber => this.getPage(pageNumber,5);
+
     return (
       <div>
         <h3>Liste des utilisateurs</h3>
@@ -114,11 +98,11 @@ export default class UsersList extends Component {
             { this.userList() }
           </tbody>
         </table>
-        <nav>
-            <ul className="pagination">
-                
-            </ul>
-        </nav>
+        <Pagination
+          usersPerPage={this.state.infos.per_page}
+          totalUsers={this.state.infos.size}
+          paginate={paginate}
+        />
       </div>
     )
   }

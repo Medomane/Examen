@@ -11,11 +11,12 @@ router.route('/:id').get((req, res) => {
 
 //Retrouve <size> utilisateur à partir de l’offset <page> x <size></size> (work)
 router.route('/:page/:size').get((req, res) => {
-  User.find().skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
-    .sort({createdAt:'asc'})
-    .then(user => res.json(user))
-    .catch(err => res.status(400).json('Error: ' + err));
-    console.log("lwla",user);
+  User.countDocuments({},function(err,count){
+    User.find().skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
+      .sort({createdAt:'asc'})
+      .then(user => res.json( {  users:user,infos:{page:req.params.page, per_page:req.params.size, size:count }})) 
+      .catch(err => res.status(400).json('Error: ' + err));
+  })
 });
 
 //Crée un nouvel utilisateur (work)
