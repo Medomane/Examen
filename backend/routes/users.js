@@ -14,12 +14,12 @@ router.route('/:page/:size').get((req, res) => {
   User.countDocuments({},function(err,count){
     User.find().skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
       .sort({createdAt:'asc'})
-      .then(user => res.json( {  users:user,infos:{page:req.params.page, per_page:req.params.size, size:count }})) 
+      .then(user => res.json( {  users:user,infos:{page:parseInt(req.params.page), per_page:parseInt(req.params.size), size:count }})) 
       .catch(err => res.status(400).json('Error: ' + err));
   })
 });
 
-//Crée un nouvel utilisateur (work)
+//Créer un nouvel utilisateur (work)
 router.route('/').post((req, res) => {
   const username = req.body.username;
   const gender =  req.body.gender;

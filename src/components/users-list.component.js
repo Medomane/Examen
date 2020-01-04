@@ -21,6 +21,7 @@ export default class UsersList extends Component {
   constructor(props) {
     super(props);
     this.deleteUser = this.deleteUser.bind(this);
+    this.convertDate = this.convertDate.bind(this);
     this.getPage = this.getPage.bind(this);
     this.state = {
         users: [],
@@ -29,12 +30,19 @@ export default class UsersList extends Component {
   }
 
   componentDidMount() {
-    this.getPage(1,5);
+    let size = 5,page = 1;
+    if(this.props.match.params.size !== undefined) size = this.props.match.params.size;
+    if(this.props.match.params.page !== undefined) page = this.props.match.params.page;
+    this.getPage(page,size);
   }
 
   getPage(page,size){
     axios.get(`http://localhost:5000/users/${page}/${size}`)
     .then(response => {
+      response.data.users.map(user => {
+        if(user.dob == null) user.dob = this.convertDate(new Date());
+        else user.dob = this.convertDate(user.dob)
+      });
       this.setState({ 
           users: response.data.users,
           infos:response.data.infos
@@ -57,6 +65,11 @@ export default class UsersList extends Component {
     return this.state.users.map(currentuser => {
       return <User users={currentuser} deleteUser={this.deleteUser} key={currentuser._id}/>;
     })
+  }
+  convertDate(inputFormat) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(inputFormat)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')
   }
 
   render() {
@@ -81,8 +94,7 @@ export default class UsersList extends Component {
           </tbody>
         </table>
         <Pagination
-          usersPerPage={this.state.infos.per_page}
-          totalUsers={this.state.infos.size}
+          infos={this.state.infos}
           paginate={paginate}
         />
       </div>

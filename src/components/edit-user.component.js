@@ -3,7 +3,7 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class CreateUser extends Component {
+export default class EditUser extends Component {
   constructor(props) {
     super(props);
 
@@ -23,6 +23,25 @@ export default class CreateUser extends Component {
       email : '',
       photo : 'avatar.png'
     }
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:5000/users/'+this.props.match.params.id)
+    .then(response => {
+        if(response.data.date == null) response.data.date = new Date(); 
+        this.setState({
+          username: response.data.username,
+          gender: response.data.gender,
+          dob: new Date(response.data.date),
+          news: response.data.news,
+          email: response.data.email,
+          photo: response.data.photo
+        })
+        console.log(this.state);
+    })
+    .catch(function (error) {
+        console.log(error);
+    })
   }
 
   onChangeUsername(e) {
@@ -73,16 +92,17 @@ export default class CreateUser extends Component {
       photo : this.state.photo
     }
     
-    axios.post('http://localhost:5000/users', user)
+    axios.put('http://localhost:5000/users/'+this.props.match.params.id, user)
       .then(res => console.log(res.data))
       .catch(error => alert(error.response.data));
     window.location = '/';
   }
 
   render() {
+      let genders = ['male','female'];
     return (
     <div>
-      <h3>Créer un utilisateur</h3>
+      <h3>Modifier un utilisateur</h3>
       <form onSubmit={this.onSubmit}>
 
         <div className="form-group"> 
@@ -107,13 +127,20 @@ export default class CreateUser extends Component {
 
         <div className="form-group"> 
           <label>Sexe: </label>
+
           <select ref="userInput"
               required
               className="form-control"
-              value={this.state.gendre}
+              value={this.state.gender}
               onChange={this.onChangeGender}>
-                <option key="male" value="male" defaultValue="male">male</option>
-                <option key="female" value="female">female</option>
+              {
+                genders.map(function(gender) {
+                  return <option 
+                    key={gender}
+                    value={gender}>{gender}
+                    </option>;
+                })
+              }
           </select>
         </div>
 
@@ -151,7 +178,7 @@ export default class CreateUser extends Component {
         </div>
 
         <div className="form-group">
-          <input type="submit" value="Créer un utilisateur" className="btn btn-primary" />
+          <input type="submit" value="Modifier" className="btn btn-primary" />
         </div>
       </form>
     </div>
