@@ -10,14 +10,50 @@ router.route('/:id').get((req, res) => {
 });
 
 //Retrouve <size> utilisateur à partir de l’offset <page> x <size></size> (work)
+///users/:page/:size?search=toto&gender=1&dob=-1
 router.route('/:page/:size').get((req, res) => {
   User.countDocuments({},function(err,count){
-    User.find().skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
-      .sort({createdAt:'asc'})
-      .then(user => res.json( {  users:user,infos:{page:parseInt(req.params.page), per_page:parseInt(req.params.size), size:count }})) 
+    let search = (req.query.search === undefined)?'':req.query.search ;
+    let gender = (req.query.gender === undefined)?0:parseInt(req.query.gender) ;
+    let dob = (req.query.dob === undefined)?0:parseInt(req.query.dob) ;
+
+    let sort = {createdAt:'asc'};
+    if(gender !== 0) sort = {gender:gender};
+    else if(dob !== 0) sort = {dob:dob};
+    let q = {};
+    if(search !== '') q = {"username": { "$regex": search, "$options": "i" }};
+    User.find(q).skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
+      .sort(sort)
+      .then(
+        function(user){
+          let s = count ;
+          if(search !== '') s = user.length;
+          return res.json( {  
+            users:user,
+            infos:{
+              page:parseInt(req.params.page), 
+              per_page:parseInt(req.params.size), 
+              size:s,
+              sup:{
+                search : req.query.search ,
+                gender : req.query.gender ,
+                dob : req.query.dob
+              }
+            }
+          })
+        }
+      ) 
       .catch(err => res.status(400).json('Error: ' + err));
   })
 });
+
+//Retrouve <size> utilisateur à partir de l’offset <page> x <size></size> et chercher un utilisateur avec son nom (query) (work)
+/*router.route('/:page/:size?search=:query').get((req, res) => {
+    User.find({"username": { "$regex": req.params.query, "$options": "i" }}).skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
+      .sort({createdAt:'asc'})
+      .then(user => res.json( {  users:user,infos:{page:parseInt(req.params.page), per_page:parseInt(req.params.size), size:user.length,query:req.query }})) 
+      .catch(err => res.status(400).json('Error: ' + err));
+});*/
 
 //Créer un nouvel utilisateur (work)
 router.route('/').post((req, res) => {

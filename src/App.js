@@ -15,10 +15,11 @@ function App() {
   return (
     <Router>
       <div className="container">
-        <Navbar />
+        <Navbar/>
         <br/>
         <Route path="/" exact component={UsersList} />
         <Route path="/users/:page/:size" exact component={UsersList} />
+        <Route path="/users/:page/:size/:query" exact component={UsersList} />
         <Route path="/users/" exact component={CreateUser} />
         <Route path="/users/:id" exact component={EditUser} />
       </div>
