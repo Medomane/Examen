@@ -5,7 +5,7 @@ import Pagination from './navigation.component';
 
 const User = props => (
   <tr>
-    <td><img alt="img" src={props.users.photo} width="40px"></img></td>
+    <td><img alt="img" src={'/avatars/'+props.users.photo} width="40px"></img></td>
     <td>{props.users.username}</td>
     <td>{props.users.gender}</td>
     <td>{props.users.dob}</td>
@@ -41,7 +41,9 @@ export default class UsersList extends Component {
     .then(response => {
       response.data.users.map(user => {
         if(user.dob == null) user.dob = this.convertDate(new Date());
-        else user.dob = this.convertDate(user.dob)
+        else user.dob = this.convertDate(user.dob);
+        if(user.news === true) user.news = 'Yes';
+        else user.news = 'No';
       });
       this.setState({ 
           users: response.data.users,
