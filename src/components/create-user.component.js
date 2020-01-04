@@ -20,8 +20,8 @@ export default class CreateUser extends Component {
       gender :  '',
       news :  false,
       dob :  new Date(),
-      email :  '',
-      photo :  'avatar.png'
+      email : '',
+      photo : 'avatar.png'
     }
   }
 
@@ -49,10 +49,16 @@ export default class CreateUser extends Component {
       email: e.target.value
     })
   }
-  onChangePhoto(e) {
+  /*onChangePhoto(e) {
     this.setState({
+      
       photo: e.target.value
     })
+  }*/
+
+  onChangePhoto(files) {
+    const file = files[0];
+    console.log(file);
   }
 
   onChangeDob(date) {
@@ -97,7 +103,7 @@ export default class CreateUser extends Component {
 
         <div className="form-group"> 
           <label>Photo : </label>
-          <input  type="text"
+          <input type="file"
               required
               className="form-control"
               value={this.state.photo}

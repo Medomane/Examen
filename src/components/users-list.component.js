@@ -17,18 +17,11 @@ const User = props => (
   </tr>
 )
 
-/*const Page = num => (
-    <li class="page-item"><a class="page-link" href={"/users/"+num+"/5"}>{num}</a></li>
-)*/
-
 export default class UsersList extends Component {
   constructor(props) {
-      //console.log(props);
     super(props);
     this.deleteUser = this.deleteUser.bind(this);
     this.getPage = this.getPage.bind(this);
-    /*this.nextPage = this.nextPage.bind(this);
-    this.prevPage = this.prevPage.bind(this);*/
     this.state = {
         users: [],
         infos:[]
@@ -67,18 +60,7 @@ export default class UsersList extends Component {
   }
 
   render() {
-    /*const [users] = this.state.users;
-    const [currentPage, getPage] = this.state(1);
-    const [usersPerPage] = this.state(10);
-
-    // Get current posts
-    const indexOfLastPost = currentPage * usersPerPage;
-    const indexOfFirstPost = indexOfLastPost - usersPerPage;
-    const currentUsers = users.slice(indexOfFirstPost, indexOfLastPost);*/
-
-    // Change page
     const paginate = pageNumber => this.getPage(pageNumber,5);
-
     return (
       <div>
         <h3>Liste des utilisateurs</h3>
