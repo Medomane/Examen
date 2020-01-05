@@ -15,7 +15,7 @@ export default class Navbar extends Component {
         </ul>
         <div className="form-inline my-2 my-lg-0">
           <input className="form-control mr-sm-2" id="search" type="search" placeholder="username" aria-label="Search" />
-          <button onClick={(e) => { let str = document.getElementById('search').value.trim() ; if(str !== '') document.location.href = '/users/1/10/'+str;else e.preventDefault(); } } 
+          <button onClick={(e) => { let str = document.getElementById('search').value.trim() ; if(str !== '') document.location.href = '/users/1/10?search='+str;else e.preventDefault(); } } 
            className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </div>
         </div>

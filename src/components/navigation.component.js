@@ -12,7 +12,7 @@ const Pagination = ({ infos, paginate }) => {
     <ul className="pagination justify-content-center">
       {pageNumbers.map(number => (
         <li key={number} className={(parseInt(number) === infos.page)?'page-item active':'page-item'}>
-          <Link onClick={() => paginate(number)} to={'/users/'+number+'/'+infos.per_page} className="page-link">{number}</Link> 
+          <Link onClick={() => paginate(number+'/'+infos.per_page)} to={'/users/'+number+'/'+infos.per_page} className="page-link">{number}</Link> 
         </li>
       ))}
     </ul>

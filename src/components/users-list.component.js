@@ -34,17 +34,14 @@ export default class UsersList extends Component {
   componentDidMount() {
     let size = (this.props.match.params.size !== undefined)?this.props.match.params.size:'5';
     let page = (this.props.match.params.page !== undefined)?this.props.match.params.page:'1';
-    let query = (this.props.match.params.query !== undefined)?this.props.match.params.query:'';
-    if(query === '') this.getPage(page,size);
-    else this.getSearch(page,size,query);
+    this.getPage(page+'/'+size+this.props.location.search);
   }
 
-  getPage(page,size){
-    axios.get(`http://localhost:5000/users/${page}/${size}`)
+  getPage(path){
+    axios.get(`http://localhost:5000/users/${path}`)
     .then(response => {
       response.data.users.map(user => {
-        if(user.dob == null) user.dob = this.convertDate(new Date());
-        else user.dob = this.convertDate(user.dob);
+        user.dob = this.convertDate(user.dob);
         if(user.news === true) user.news = 'Yes';
         else user.news = 'No';
       });
@@ -57,26 +54,7 @@ export default class UsersList extends Component {
       console.log(error);
     })
   }
-
-
-  getSearch(page,size,query){
-    axios.get(`http://localhost:5000/users/${page}/${size}/${query}`)
-    .then(response => {
-      response.data.users.map(user => {
-        if(user.dob == null) user.dob = this.convertDate(new Date());
-        else user.dob = this.convertDate(user.dob);
-        if(user.news === true) user.news = 'Yes';
-        else user.news = 'No';
-      });
-      this.setState({ 
-          users: response.data.users,
-          infos:response.data.infos
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
+  
   deleteUser(id) {
     axios.delete('http://localhost:5000/users/'+id)
       .then(response => { console.log(response.data)});
@@ -91,6 +69,7 @@ export default class UsersList extends Component {
     })
   }
   convertDate(inputFormat) {
+    if(inputFormat === null || inputFormat === '') return null ;
     function pad(s) { return (s < 10) ? '0' + s : s; }
     var d = new Date(inputFormat)
     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/')

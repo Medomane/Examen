@@ -78,6 +78,7 @@ export default class EditUser extends Component {
     this.setState({
       dob: date,
     });
+    console.log(date);
   }
 
   onSubmit(e) {
@@ -86,7 +87,7 @@ export default class EditUser extends Component {
     const user = {
       username : this.state.username,
       gender :  this.state.gender,
-      dob :  ""+this.state.dob+"",
+      dob :  this.state.dob,
       news :  this.state.news,
       email :  this.state.email,
       photo : this.state.photo

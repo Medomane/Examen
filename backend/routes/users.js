@@ -37,7 +37,8 @@ router.route('/:page/:size').get((req, res) => {
               sup:{
                 search : req.query.search ,
                 gender : req.query.gender ,
-                dob : req.query.dob
+                dob : req.query.dob,
+                sort:sort
               }
             }
           })
