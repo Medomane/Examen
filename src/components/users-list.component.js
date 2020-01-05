@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './navigation.component';
+import Sort from './sort.component';
 import { GoTrashcan,GoPencil } from 'react-icons/go';
 
 const User = props => (
@@ -24,7 +25,6 @@ export default class UsersList extends Component {
     this.deleteUser = this.deleteUser.bind(this);
     this.convertDate = this.convertDate.bind(this);
     this.getPage = this.getPage.bind(this);
-    this.getSearch = this.getSearch.bind(this);
     this.state = {
         users: [],
         infos:[]
@@ -85,8 +85,6 @@ export default class UsersList extends Component {
             <tr>
               <th>Photo</th>
               <th>Username</th>
-              <th>Sexe</th>
-              <th>Dob</th>
               <th>News</th>
               <th>Email</th>
               <th>Action</th>
@@ -96,6 +94,8 @@ export default class UsersList extends Component {
             { this.userList() }
           </tbody>
         </table>
+        
+        <Sort path={this.props.location.search}/>
         <Pagination
           infos={this.state.infos}
           paginate={paginate}
