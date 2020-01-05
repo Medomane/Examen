@@ -54,9 +54,13 @@ export default class UsersList extends Component {
   }
 
   getPage(path){
-    let query = (this.props.location.search !== undefined)?this.props.location.search:'';
-    if(query === '') query = '?'+sorted.col+'='+sorted.type;
-    else query = query.split('&')[0]+'&'+sorted.col+'='+sorted.type;
+    let query = '';
+    if(sorted.type !== 0){
+      query = (this.props.location.search !== undefined)?this.props.location.search:'';
+      if(query === '') query = '?'+sorted.col+'='+sorted.type;
+      else query = query.split('&')[0]+'&'+sorted.col+'='+sorted.type;
+    }
+    console.log(path+query);
     axios.get(`http://localhost:5000/users/${path}${query}`)
     .then(response => {
       response.data.users.map(user => {

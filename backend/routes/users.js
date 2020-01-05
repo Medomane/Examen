@@ -48,14 +48,6 @@ router.route('/:page/:size').get((req, res) => {
   })
 });
 
-//Retrouve <size> utilisateur à partir de l’offset <page> x <size></size> et chercher un utilisateur avec son nom (query) (work)
-/*router.route('/:page/:size?search=:query').get((req, res) => {
-    User.find({"username": { "$regex": req.params.query, "$options": "i" }}).skip(parseInt(req.params.size) * (Math.max(1, parseInt(req.params.page))-1)).limit(parseInt(req.params.size))
-      .sort({createdAt:'asc'})
-      .then(user => res.json( {  users:user,infos:{page:parseInt(req.params.page), per_page:parseInt(req.params.size), size:user.length,query:req.query }})) 
-      .catch(err => res.status(400).json('Error: ' + err));
-});*/
-
 //Créer un nouvel utilisateur (work)
 router.route('/').post((req, res) => {
   const username = req.body.username;
@@ -107,7 +99,5 @@ router.route('/').get((req, res) => {
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
-
-
 
 module.exports = router;
