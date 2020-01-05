@@ -78,7 +78,6 @@ export default class EditUser extends Component {
     this.setState({
       dob: date,
     });
-    console.log(date);
   }
 
   onSubmit(e) {

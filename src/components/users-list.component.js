@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from './navigation.component';
-import Sort from './sort.component';
 import { GoTrashcan,GoPencil } from 'react-icons/go';
+import { FaSortAlphaDown,FaSortAlphaUp } from 'react-icons/fa';
 
 const User = props => (
   <tr>
@@ -19,12 +19,15 @@ const User = props => (
   </tr>
 )
 
+let sorted = {col:'',type:0};
+
 export default class UsersList extends Component {
   constructor(props) {
     super(props);
     this.deleteUser = this.deleteUser.bind(this);
     this.convertDate = this.convertDate.bind(this);
     this.getPage = this.getPage.bind(this);
+    this.sort = this.sort.bind(this);
     this.state = {
         users: [],
         infos:[]
@@ -37,8 +40,24 @@ export default class UsersList extends Component {
     this.getPage(page+'/'+size+this.props.location.search);
   }
 
+  sort(type){
+    sorted.col = type;
+    if(sorted.type === 0) sorted.type = 1;
+    else sorted.type *= -1;
+    let size = (this.props.match.params.size !== undefined)?this.props.match.params.size:'5';
+    let page = (this.props.match.params.page !== undefined)?this.props.match.params.page:'1';
+    let query = (this.props.location.search !== undefined)?this.props.location.search:'';
+    if(query === '') query = '?'+sorted.col+'='+sorted.type;
+    else query = query.split('&')[0]+'&'+sorted.col+'='+sorted.type;
+    //console.log(page+'/'+size+query);
+    this.getPage(page+'/'+size+query);
+  }
+
   getPage(path){
-    axios.get(`http://localhost:5000/users/${path}`)
+    let query = (this.props.location.search !== undefined)?this.props.location.search:'';
+    if(query === '') query = '?'+sorted.col+'='+sorted.type;
+    else query = query.split('&')[0]+'&'+sorted.col+'='+sorted.type;
+    axios.get(`http://localhost:5000/users/${path}${query}`)
     .then(response => {
       response.data.users.map(user => {
         user.dob = this.convertDate(user.dob);
@@ -77,6 +96,7 @@ export default class UsersList extends Component {
 
   render() {
     const paginate = pageNumber => this.getPage(pageNumber,5);
+    const sort = type => this.sort(type);
     return (
       <div>
         <h3>Liste des utilisateurs</h3>
@@ -85,6 +105,12 @@ export default class UsersList extends Component {
             <tr>
               <th>Photo</th>
               <th>Username</th>
+              <th>
+                <a href="#" onClick={ (e) => {e.preventDefault();sort('gender');}} href="#">{ (sorted.type === 1 && sorted.col === 'gender')?<FaSortAlphaDown />:((sorted.type === -1 && sorted.col === 'gender')?<FaSortAlphaUp />:'')} Sexe</a>
+              </th>
+              <th>
+                <a href="#" onClick={ function(e) {e.preventDefault();sort('dob');}} href="#">{ (sorted.type === 1 && sorted.col === 'dob')?<FaSortAlphaDown />:((sorted.type === -1 && sorted.col === 'dob')?<FaSortAlphaUp />:'')} Dob</a>
+              </th>
               <th>News</th>
               <th>Email</th>
               <th>Action</th>
@@ -94,8 +120,6 @@ export default class UsersList extends Component {
             { this.userList() }
           </tbody>
         </table>
-        
-        <Sort path={this.props.location.search}/>
         <Pagination
           infos={this.state.infos}
           paginate={paginate}
