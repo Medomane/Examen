@@ -37,7 +37,6 @@ export default class EditUser extends Component {
           email: response.data.email,
           photo: response.data.photo
         })
-        console.log(this.state);
     })
     .catch(function (error) {
         console.log(error);

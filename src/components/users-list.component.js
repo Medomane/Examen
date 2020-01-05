@@ -49,7 +49,6 @@ export default class UsersList extends Component {
     let query = (this.props.location.search !== undefined)?this.props.location.search:'';
     if(query === '') query = '?'+sorted.col+'='+sorted.type;
     else query = query.split('&')[0]+'&'+sorted.col+'='+sorted.type;
-    //console.log(page+'/'+size+query);
     this.getPage(page+'/'+size+query);
   }
 
